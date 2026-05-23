@@ -1,0 +1,41 @@
+name: Test (dev branch)
+
+# Runs tests on every push to dev and on PRs targeting main.
+# Never deploys -- that's deploy.yml's job.
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      # These steps only run if the app/ scaffold has been instantiated.
+      # If app/backend/package.json or app/frontend/package.json don't exist,
+      # the steps are skipped (the project isn't a Node web app yet).
+
+      - name: Install backend dependencies
+        run: cd app/backend && npm install
+        if: ${{ hashFiles('app/backend/package.json') != '' }}
+
+      - name: Run backend tests
+        run: cd app/backend && npx jest --runInBand --forceExit
+        if: ${{ hashFiles('app/backend/package.json') != '' }}
+
+      - name: Install frontend dependencies
+        run: cd app/frontend && npm install
+        if: ${{ hashFiles('app/frontend/package.json') != '' }}
+
+      - name: Run frontend tests
+        run: cd app/frontend && npm test -- --run
+        if: ${{ hashFiles('app/frontend/package.json') != '' }}

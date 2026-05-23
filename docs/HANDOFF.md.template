@@ -1,0 +1,65 @@
+# HANDOFF.md.template
+
+Copy this file to `HANDOFF.md` at the repo root when Claude.ai is handing off a POC or design to Claude Code.  Fill in the sections.  Claude Code reads this on the first session after handoff and adds an `## Acknowledged` section.
+
+---
+
+# Handoff: [Project / feature name]
+
+**Date**: YYYY-MM-DD
+**From**: Claude.ai conversation thread (link or short identifier)
+**To**: Claude Code
+
+## What this is
+
+One paragraph: what is being handed off, and why.  Is this a POC graduating to Build?  A new feature within an existing project?  A redesign?
+
+## What's been decided
+
+The conclusions from the POC conversation that should be treated as settled:
+
+(List, with one line each)
+
+## What's been ruled out
+
+Approaches considered and rejected, with the reason.  This prevents Claude Code from re-deriving the same options later.
+
+(List with reasons)
+
+## Data shape
+
+If the POC produced or relies on a specific data shape, describe it here.  Schemas, sample rows, expected ranges, edge cases discovered.
+
+```sql
+-- or json, or whatever the canonical shape is
+```
+
+## Visual direction
+
+Screenshots, mockups, or component descriptions from the POC.  If an SVG / HTML mockup was produced in Claude.ai, paste it here.
+
+## Open questions
+
+Things that weren't resolved during the POC that Claude Code should ask about or flag when the relevant code is being written:
+
+(List)
+
+## Next concrete steps
+
+The first 3-5 things Claude Code should do.  Be specific enough that they can be executed without further clarification.
+
+1. ____
+2. ____
+3. ____
+
+## Out of scope for this handoff
+
+Anything that came up but explicitly isn't part of this work yet.
+
+(List)
+
+---
+
+## Acknowledged
+
+(Claude Code adds this section on first read.  Format: date + one-line summary of how Claude Code will proceed.)
