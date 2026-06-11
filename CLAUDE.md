@@ -132,6 +132,25 @@ When introducing new dependencies or env vars, document them in the relevant `.m
 
 Don't push code that hasn't been tested locally.  If the user is in the middle of a long-running operation, pause pushes until it completes.
 
+## Delegation policy (Claude Code)
+
+Spend the expensive model on judgment and the cheap models on mechanics.  Before starting any task, ask: does this need design sense, interpretation, or a decision?  If not, delegate it to a background agent on a cheaper model (the Agent tool accepts a per-agent model override) and keep the main session free.  This is a standing instruction, not an optimization to apply when remembered.
+
+Delegate (sonnet, or haiku when it is pure run-and-report):
+
+- Long-running supervision: data backfills, batch jobs, migrations, watching a fetch or build to completion and rerunning idempotent steps after timeouts.
+- Noisy-output work: anything that prints hundreds of progress lines.  The agent absorbs the output and reports a summary, keeping the main context clean.
+- Bulk mechanical execution against an exact spec: scripted file sweeps, log triage, repetitive lookups, broad codebase searches (the Explore agent type).
+
+Never delegate:
+
+- Design, result interpretation, or anything that ends in a decision.  Cheap models execute; they do not decide what the results mean.
+- Safety-critical or money-touching code: anything where a wrong change has irreversible, financial, or security consequences.
+- Writing `CHANGES.md` entries or any doc content that records a decision or rationale.
+- Git commits and pushes.  The main session reviews delegated output before anything lands in the repo.
+
+A delegated prompt must be self-contained and judgment-free: exact paths and commands, the expected output, failure and stop conditions (never loop forever on a repeating error), an idempotent retry rule when the task allows one, and explicit guardrails listing what must not be touched.  If writing those instructions would take longer than doing the task, just do the task.
+
 ## Core definitions
 
 This section captures business or domain definitions that have been agreed and validated during exploration.  Once a definition lands here it should not be relitigated without explicit instruction.
