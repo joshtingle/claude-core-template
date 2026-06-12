@@ -151,7 +151,17 @@ Never delegate:
 
 A delegated prompt must be self-contained and judgment-free: exact paths and commands, the expected output, failure and stop conditions (never loop forever on a repeating error), an idempotent retry rule when the task allows one, and explicit guardrails listing what must not be touched.  If writing those instructions would take longer than doing the task, just do the task.
 
-## Core definitions
+## Server lifecycle policy (Claude Code)
+
+The user frequently runs simultaneous dev servers for different projects on the same machine.  Start servers gracefully and never collide with the others.
+
+Before starting any dev server, probe whether its default port is already bound.  Verify ownership by the owning process's command line or working directory, never by a health-endpoint response alone -- template-derived projects share health response shapes, so a probe can misidentify another app's server as this project's.  Three cases:
+
+- Bound by a verified healthy instance of THIS project's server: reuse it.  Do not start a duplicate.
+- Bound by a stale or crashed instance of this project's server, or by a background task this session started: kill it and restart.  After stopping a task, confirm the port actually freed; dev-server wrappers can orphan child processes.
+- Bound by anything else: leave it alone.  It likely belongs to another project mid-work.  Find an open port instead (probe upward from the default, pass it via the server's port flag or env var), update any config that points at the moved server (client API base URLs), and clearly tell the user which port the server landed on.
+
+The only processes ever eligible for killing are this project's own servers and this session's own background tasks.  Never kill an unidentified process on a port, no matter how convenient.  When in doubt about ownership, pick a different port and surface the situation.
 
 This section captures business or domain definitions that have been agreed and validated during exploration.  Once a definition lands here it should not be relitigated without explicit instruction.
 
