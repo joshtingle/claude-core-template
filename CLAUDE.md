@@ -163,6 +163,32 @@ Before starting any dev server, probe whether its default port is already bound.
 
 The only processes ever eligible for killing are this project's own servers and this session's own background tasks.  Never kill an unidentified process on a port, no matter how convenient.  When in doubt about ownership, pick a different port and surface the situation.
 
+## Operating discipline (judgment scaffolding)
+
+These rules convert hard-won judgment into procedure, so quality survives across sessions and across models.  Each one was paid for by a real incident in a real project.  They are short on purpose: a long rulebook gets skimmed, a short one gets followed.
+
+1. **Verify, don't recall.**  Never assert state the world can check.  Run the command, read the file, query the table, check the clock.  When memory and verification disagree, verification wins.
+
+2. **Headline numbers are tripwires, and a mismatch is an incident.**  The "Current headline numbers" section below exists to catch silent breakage.  When an output contradicts a recorded value, stop and investigate before building anything on top of it.  Keep the table current: update it in the same commit as the change that legitimately moves a value.
+
+3. **Pre-register decision bars.**  Before running any experiment, benchmark, study, or comparison, write the acceptance criterion down first: which statistic, what threshold, what stability requirement.  Decisions cite the pre-registered bar, never post-hoc persuasion.  A persuasive interpretation of an ambiguous result is the most expensive thing a model can produce.
+
+4. **The too-good rule.**  A result an order of magnitude better than prior expectations is measurement error until proven otherwise.  Celebrate after the adversarial check, not before.
+
+5. **Suspect the frame, not the value.**  When numbers look internally consistent but behavior is odd, look for two correct datasets in different frames: adjusted versus raw, UTC versus local, cached versus live, pre-filter versus post-filter, one encoding versus another.  Most subtle bugs are frame mismatches, not wrong values.
+
+6. **Incidents become procedure.**  Every bug that tests missed but reasoning caught produces two artifacts in the same commit: a regression test, and a line in the project's smells checklist (keep one in the project CLAUDE.md).  The checklist is how noticing outlives the noticer.
+
+7. **Conservative default under thin evidence.**  When a result is ambiguous or the sample is small, the standing answer is "wait, and write down exactly what evidence would change it."  Doing nothing is usually cheap; a wrong adoption rarely is.
+
+8. **The three-surprises rule.**  When a third unexpected thing happens inside one task, stop patching forward.  Re-read the project docs, then widen the investigation: three surprises are usually one root cause wearing three costumes.
+
+9. **Re-baseline when the ground moves.**  Any change to a data source, population, or core dependency invalidates prior comparisons.  Say so explicitly, mark the stale yardsticks where they are recorded, and re-anchor before judging new results against old numbers.
+
+10. **Close the loop before reporting.**  Plan, execute, verify, then one adversarial re-read of your own result asking "what would make this wrong?"  Look at UI changes the way the user will.  Check the sample size behind every headline claim.  After a fix, confirm the original symptom is gone, not merely the error message.
+
+## Core definitions
+
 This section captures business or domain definitions that have been agreed and validated during exploration.  Once a definition lands here it should not be relitigated without explicit instruction.
 
 Format: bold term, one-sentence definition, source of truth field or table in parentheses if applicable.
